@@ -1,5 +1,5 @@
-As the project uses react+redux, it uses components and containers, two enttites representing the visuals.
-Components are representing the markup while the main logic and appliction state are transferred to the components by a container.
+As the project uses react+redux, it uses components and containers, two entities representing the visuals.
+Components are representing the markup while the main logic and application state are transferred to the components by a container.
 
 # Comments.js Component
 
@@ -14,14 +14,14 @@ This component is used to build the list of chats on the messaging page.
 
 This list can contain several elements
 
-- Chat. Chat is a connectable component called SearchListChat which contains user information, their avatar, time of the last visit, and a latest message from the conversantion with this particular user. clicking this component leads to a full chat with a current user.
+- Chat. Chat is a connectable component called SearchListChat which contains user information, their avatar, time of the last visit, and a latest message from the conversation with this particular user. clicking this component leads to a full chat with a current user.
 
--User. The component is displayed after the search results are received. It contains the user info and their avatar. A new/existing chat is displayed when clicking the user component. 
+- User. The component is displayed after the search results are received. It contains the user info and their avatar. A new/existing chat is displayed when clicking the user component.
 
 - Search bar. The search is initiated by dispatching the event this.props.dispatch(searchChat(text, chats)) with the proper parameters.
 As the search is done on the server side as well, we decided to use debounce of 500ms while searching. The chats list is stored locally, which allows filtering chats in the reducer itself. If the chat list is empty the search bar just informs the user that search is available.
 
-To improve the app visuals we use a secrollbar from the react-custom-scrollbars with a parameter for auto-hide and hiding the horizontal scroll on Windows OS.
+To improve the app visuals we use a scrollbar from the react-custom-scrollbars with a parameter for auto-hide and hiding the horizontal scroll on Windows OS.
 
 Redux is used inside the project and usually a component contains the markup and a controller represents its state. However, sometimes we change the state inside the component itself, like a self-controlled textbox where the value depends on the state.
 
@@ -42,10 +42,10 @@ The username displayed in PersonDropdown is a link to a person's page, namely <L
 # sagas.js
 
 Sagas, a new approach to work with react+redux is used inside the application.
-Sagas is used to form and send requests to the server. In a standard Redux workfow, that was done with Actions. However, using sagas gives the developer several advantages.
+Sagas is used to form and send requests to the server. In a standard Redux workflow, that was done with Actions. However, using sagas gives the developer several advantages.
 
 - Actions do not contain the unnecessary logic, they only reflect the action type and parameters.
-- sagas contains the functions with a separate watcher in each of them, processing the pre-set event  
+- sagas contains the functions with a separate watcher in each of them, processing the pre-set action
 
-The requests for working with a chats page are formed and sent in the saga. After that, a new event containing the data received from the server is dispatched. To encode/decode the sent and received data the normalizer module is used, creating one object ordered by a unique id from a set of objects.
+The requests for working with a chats page are formed and sent in the saga. After that, a new action containing the data received from the server is dispatched. To encode/decode the sent and received data the normalizer module is used, creating one object ordered by a unique id from a set of objects.
  
