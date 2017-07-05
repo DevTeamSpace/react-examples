@@ -1,39 +1,51 @@
-Так как в проекте используется сочетание react+redux, то есть две основных сущности отвечающих за визуальное отображение, компоненты и контейнеры.
-Компоненты представляют из себя разметку, когда основная логика и состояние приложения передает контейнер в компоненты внутри его.
+As the project uses react+redux, it uses components and containers, two enttites representing the visuals.
+Components are representing the markup while the main logic and appliction state are transferred to the components by a container.
 
-# Компонент Comments.js
+# Comments.js Component
 
-Данный компонент представляет из себя комментарий к запросу пользователя. Основной особенностью комментария в данном проекте является наличие быстрой карточки пользователя - подключаемый модуль Avatar.
-Так как быстрая карточка пользователя содержит в себе много информации, соответственно мы должны ее передать в данный компонент. Для этого параметры предварительно формируется prepareAvatarData(item) {}.
-Компоненты формируются таким образом, чтоб избежать огромной логики внутри и чтобы можно было повторно ипользовать компонент в разных местах приложения.
-В самом верху объявления компонента производится проверка входящих параметров. Это очень облегчает разработку, а такая запись позволяет быстрей понять что должен получить компонент на вход.
+The given component is representing a comment to a user's request. The main feature of the comment in this particular project is a fast user card - the Avatar Module. As the user card contains lots of user info, all of it should be loaded and transferred into the component itself. The parameters are pre-formed by the prepareAvatarData(item) method.
+The components are formed in a way to avoid the extensive logic in the app itself, and to make the component reusable in a different modules of the app.
 
-# Компонент ChatMenu
+At the top of component declaration we check the incoming parameters. This makes the development process easier letting the developer know what values should be given as the input.
 
-Данный компонент используется для построения списка чатов, на странице чатов.
-В этом списке могут содержаться разные элементы
--чат. Представляет из себя подключаемый компонент SearchListChat который содержит в себе информацию о пользователе, его аватар, время последнего посещения, а так же последнее сообщение с данным пользователем. По нажатию происходит переход к чату с данным пользователем
--пользователь. Отображаеся только после получения результатов глобального поиска по юзерам. Содержит в себе информацию о пользователе и его аватар. По нажатию происходит создание чата с данным пользователем
+# ChatMenu Component
 
-Так же в компоненте присутствует строка поиска. Поиск происходит диспатчем события this.props.dispatch(searchChat(text, chats)) в которое передаются необходимые параметры. Но так как поиск выполняется еще и на сервере, было принято решение использовать debounce в 500мс на поиск.  Список чатов хранится локально поэтому фильтация имеющихся чатов происходит сразу локально в редьюсере.
-При пустом списке чатов существует заглушка которая информирует о возможности использовать поиск.
-Для улучшения вида приложения используется нестандартный скроллбар из модуля react-custom-scrollbars с параметрами для автоскрытия и скрытием горизонтального скролла (для windows OS)
-В проекте используется redux поэтому подход к построению компонентов таков что компонент должен содержать разметку, а за его состояние должен отвечать контейнер. Но есть такие моменты для которых все же лучше использовать изменение состояния внутри компонента. Таким примером служит создание контроллируемого текстбокса, где его значение зависит от состояния.
+This component is used to build the list of chats on the messaging page.
 
-# Компонент ChatCard
+This list can contain several elements
 
-Данный компонент используется для вывода сообщений с пользователем, на странице чатов.
-Компонент выводит список сообщений с пользователем, где сообщения представляют из себя массив объектов с полями: текст, время отправки, автор сообщения, статус сообщений (отправляется/отправлено/не отправлено).
-Так же как и в ChatMenu используется кастомный скроллбар с параметрами и автопрокруткой в конец при изменении параметров (получение сообщения/отправка сообщения).
-Отправка сообщений производится диспатчем события с параметрами this.props.dispatch(sendMessage(this.state.message, this.props.user.user_id));.
-В текстовом поле для ввода сообщений имеется счетчик количества символов который ограничевает ввод текста превыше допустимого. Ограничение основывается на проверке и установке состояния в компоненте.
-Так же в компоненте предусмотрена возможность добавлять пользователя в друзья или группы. Для этого используется созданный нами компонент PersonDropdown.
-Имя пользователя отображаемое в данном компоненте является ссылкой на страницу пользователя, а именно <Link> из react-router. Ссылка формируется при помощи ES6 интерполяции строк {`/people/${user.user_id}`}
+- Chat. Chat is a connectable component called SearchListChat which contains user information, their avatar, time of the last visit, and a latest message from the conversantion with this particular user. clicking this component leads to a full chat with a current user.
+
+-User. The component is displayed after the search results are received. It contains the user info and their avatar. A new/existing chat is displayed when clicking the user component. 
+
+- Search bar. The search is initiated by dispatching the event this.props.dispatch(searchChat(text, chats)) with the proper parameters.
+As the search is done on the server side as well, we decided to use debounce of 500ms while searching. The chats list is stored locally, which allows filtering chats in the reducer itself. If the chat list is empty the search bar just informs the user that search is available.
+
+To improve the app visuals we use a secrollbar from the react-custom-scrollbars with a parameter for auto-hide and hiding the horizontal scroll on Windows OS.
+
+Redux is used inside the project and usually a component contains the markup and a controller represents its state. However, sometimes we change the state inside the component itself, like a self-controlled textbox where the value depends on the state.
+
+# ChatCard Component
+
+This component is used for displaying user messages on the chat page.
+
+The component outputs a list of messages where the messages are an array with the following fields [text, datetime created, author, status (sent, sending, error, etc.)
+
+The messages are sent by dispatching the event with parameters this.props.dispatch(sendMessage(this.state.message, this.props.user.user_id)); The text field for messages contains a counter limiting characters count. The limitation is based on getting and setting state inside the component.
+
+Like the ChatMenu, the component uses a custom parametrized scrollbar with the autoscroll triggered on sending ore receiving a message.
+
+The component cann add user to friends or groups. For this it uses a newly-created sub-component called PersonDropdown.
+The username displayed in PersonDropdown is a link to a person's page, namely <Link> from the react-router. The link is formed with the ES6-based string interpolation  {`/people/${user.user_id}`}
+
 
 # sagas.js
 
-В проекте используется sagas. Это новый подход при работе с react+redux.
-sagas используют для формирования и отправки запросов на сервер. В стандартном подходе redux это происходило в actions. Использование sagas дает ряд приемуществ.
--Actions теперь не несут дополнительной логики, а только отвечают за тип события и его параметры.
-В sagas имеются функции, и для каждой из них есть свой отдельный watcher который реагирует на заданое событие.
-В данной саге формируются и отправляются запросы для работы со страницей чатов, после чего диспатчится новое событие, но уже с данными которые вернул нам сервер. Для большего удобства используется модуль normalizer, который из массива объектов создает один объект упорядоченный по уникальному полю.
+Sagas, a new approach to work with react+redux is used inside the application.
+Sagas is used to form and send requests to the server. In a standard Redux workfow, that was done with Actions. However, using sagas gives the developer several advantages.
+
+- Actions do not contain the unnecessary logic, they only reflect the action type and parameters.
+- sagas contains the functions with a separate watcher in each of them, processing the pre-set event  
+
+The requests for working with a chats page are formed and sent in the saga. After that, a new event containing the data received from the server is dispatched. To encode/decode the sent and received data the normalizer module is used, creating one object ordered by a unique id from a set of objects.
+ 
